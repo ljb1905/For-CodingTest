@@ -19,7 +19,7 @@ int main() {
 		while (l <= r) {
 			mid = (l + r) / 2;
 			int findval = arr[mid];
-			if (findval <= a) { //같아도 l을 옮김(lower bound -> a이상의 값이 처음 나오는 위치)
+			if (findval <= a) { //같아도 l을 옮김(lower bound -> a이상의 값 제일 오른쪽)
 				l = mid + 1;
 			}
 			else {
