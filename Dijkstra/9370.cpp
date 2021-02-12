@@ -22,6 +22,7 @@ int main() {
 	int t; scanf("%d", &t);
 	while (t--) {
 		vector <s> v[2001];
+		queue <int> qq;
 		int dis[2001] = { 0, };
 		bool chk[2001] = { 0, };
 		bool inp[2001] = { 0, };
@@ -57,14 +58,26 @@ int main() {
 				s next = v[now.ed][i];
 				if (dis[next.ed] > dis[now.ed] + next.cost || dis[next.ed]==0) {
 					dis[next.ed] = dis[now.ed] + next.cost;
-					pq.push(s(next.ed, dis[next.ed], now.thchk));
+					bool tmp = false;
+					if (now.thchk == true || next.thchk == true) {
+						tmp = true;
+					}
+					pq.push(s(next.ed, dis[next.ed], tmp));
 				}
 			}
 		}
 		for (int i = 0; i <= n; i++) {
 			if (ans[i] == true && inp[i] == true) {
-				printf("%d\n", ans);
+				qq.push(i);
 			}
+		}
+		while (qq.size() > 1) {
+			printf("%d ", qq.front());
+			qq.pop();
+		}
+		if (!qq.empty()) {
+			printf("%d\n", qq.front());
+			qq.pop();
 		}
 	}
 	return 0;
