@@ -1,83 +1,94 @@
 #include <stdio.h>
-#include <vector>
 #include <queue>
+#include <vector>
+#include <limits.h>
 #include <functional>
+#include <algorithm>
 using namespace std;
 
-int n, m, k, st, g, h;
-struct s {
+struct strr {
 	int ed, cost;
-	bool thchk;
-	s(){}
-	s(int ed, int cost, bool thchk) 
-		:ed(ed),cost(cost),thchk(thchk)
+	strr(){}
+	strr(int ed,long long cost):
+		ed(ed),cost(cost)
 	{}
-	bool operator < (const s& o)const {
+	bool operator <(const strr & o)const {
 		return cost > o.cost;
 	}
 };
-priority_queue<s> pq;
+
+int n, m, t;
+int s, g, h;
+
+void dijk(bool* chk, long long* dis, vector<strr> v[2001], int st) {
+	priority_queue<strr> pq;
+	pq.push(strr(st, 0));
+	while (!pq.empty()) {
+		strr now = pq.top();
+		pq.pop();
+		if (chk[now.ed] == true)
+			continue;
+		chk[now.ed] = true;
+		for (int i = 0; i < v[now.ed].size(); i++) {
+			strr next = v[now.ed][i];
+			if (dis[next.ed] > dis[now.ed] + next.cost) {
+				dis[next.ed] = dis[now.ed] + next.cost;
+				pq.push(strr(next.ed, dis[next.ed]));
+			}
+		}
+	}
+}
 
 int main() {
-	int t; scanf("%d", &t);
-	while (t--) {
-		vector <s> v[2001];
-		queue <int> qq;
-		int dis[2001] = { 0, };
-		bool chk[2001] = { 0, };
-		bool inp[2001] = { 0, };
-		bool ans[2001] = { 0, };
-		scanf("%d %d %d", &n, &m, &k);
-		scanf("%d %d %d", &st, &g, &h);
+	int tc; scanf("%d", &tc);
+	while (tc--) {
+		vector<strr> v[2001];
+		priority_queue<int,vector<int>, greater<int>> ans;
+		bool chk[2001] = { false, };
+		long long dis[2001] = { 0, };
+		bool chk2[2001] = { false, };
+		long long dis2[2001] = { 0, };
+		bool chk3[2001] = { false, };
+		long long dis3[2001] = { 0, };
+		scanf("%d %d %d", &n, &m, &t);
+		scanf("%d %d %d", &s, &g, &h);
+		for (int i = 1; i <= n; i++) {
+			dis[i] = INT_MAX;
+			dis2[i] = INT_MAX;
+			dis3[i] = INT_MAX;
+		}
 		for (int i = 0; i < m; i++) {
 			int a, b, c; scanf("%d %d %d", &a, &b, &c);
-			if ((a == g && b == h) || (a == h && b == g)) {
-				v[a].push_back(s(b, c, true));
-				v[b].push_back(s(a, c, true));
-			}
-			else {
-				v[a].push_back(s(b, c, false));
-				v[b].push_back(s(a, c, false));
-			}
+			v[a].push_back(strr(b, c));
+			v[b].push_back(strr(a, c));
 		}
-		for (int i = 0; i < k; i++) {
+		dis[s] = 0;
+		dijk(chk, dis, v, s); //s에서 출발
+		dis2[g] = 0;
+		dijk(chk2, dis2, v, g); //g에서 출발
+		dis3[h] = 0;
+		dijk(chk3, dis3, v, h); //h에서 출발
+
+		for (int i = 0; i < t; i++) {
 			int a; scanf("%d", &a);
-			inp[a] = true;
-		}
-		pq.push(s(st, 0, false));
-		while (!pq.empty()) {
-			s now = pq.top();
-			pq.pop();
-			if (chk[now.ed] == true) 
+			long long tmp = dis[a];
+			long long comp[2];
+			comp[0] = dis[g] + dis2[h] + dis3[a]; // 같을떄?
+			comp[1] = dis[h] + dis3[g] + dis2[a];
+			long long tmp2 = min(comp[0], comp[1]);
+			if (tmp == INT_MAX)
 				continue;
-			chk[now.ed] = true;
-			if (now.thchk == true) {
-				ans[now.ed] = true;
-			}
-			for (int i = 0; i < v[now.ed].size(); i++) {
-				s next = v[now.ed][i];
-				if (dis[next.ed] > dis[now.ed] + next.cost || dis[next.ed]==0) {
-					dis[next.ed] = dis[now.ed] + next.cost;
-					bool tmp = false;
-					if (now.thchk == true || next.thchk == true) {
-						tmp = true;
-					}
-					pq.push(s(next.ed, dis[next.ed], tmp));
-				}
+			if (tmp == tmp2) {
+				ans.push(a);
 			}
 		}
-		for (int i = 0; i <= n; i++) {
-			if (ans[i] == true && inp[i] == true) {
-				qq.push(i);
-			}
+		while (ans.size() > 1) {
+			printf("%d ", ans.top());
+			ans.pop();
 		}
-		while (qq.size() > 1) {
-			printf("%d ", qq.front());
-			qq.pop();
-		}
-		if (!qq.empty()) {
-			printf("%d\n", qq.front());
-			qq.pop();
+		if (ans.size() == 1) {
+			printf("%d\n", ans.top());
+			ans.pop();
 		}
 	}
 	return 0;
