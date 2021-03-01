@@ -7,7 +7,8 @@ int dy[4] = { -1,0,0,1 };
 int dx[4] = { 0,-1,1,0 };
 int n;
 
-int dfs(bool chk, int i, int j, char x) {
+void dfs(bool chk, int i, int j, char x) {
+	visit[chk][i][j]=true;
 	for (int a = 0; a < 4; a++) {
 		int nexti = i + dy[a];
 		int nextj = j + dx[a];
@@ -15,17 +16,22 @@ int dfs(bool chk, int i, int j, char x) {
 			continue;
 		if (visit[chk][nexti][nextj] == true)
 			continue;
-		if (arr[nexti][nextj] == x) {
-
+		if (chk == 0 && arr[nexti][nextj] == x) {
+			dfs(chk, nexti, nextj, x);
+		}
+		else if (chk == 1 && (x=='R' || x=='G')&&(arr[nexti][nextj] == 'R' || arr[nexti][nextj] == 'G')) {
+			dfs(chk, nexti, nextj, x);
+		}
+		else if (chk == 1 && (x == arr[nexti][nextj])) {
+			dfs(chk,nexti,nextj,x);
 		}
 	}
+	return;
 }
 int main() {
 	scanf("%d", &n);
 	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			scanf("%d", &arr[i][j]);
-		}
+		scanf("%s", arr[i]);
 	}
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
@@ -34,8 +40,14 @@ int main() {
 				dfs(0, i, j, x);
 				ans[0]++;
 			}
+			if (visit[1][i][j] == false) {
+				char x = arr[i][j];
+				dfs(1, i, j, x);
+				ans[1]++;
+			}
 		}
 	}
+	printf("%d %d\n", ans[0], ans[1]);
 
 	return 0;
 }
