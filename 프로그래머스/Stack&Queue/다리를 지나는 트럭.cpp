@@ -1,6 +1,6 @@
 #include <string>
-#include <queue>
 #include <vector>
+#include <queue>
 
 using namespace std;
 queue <int> q;
@@ -8,32 +8,26 @@ queue <int> q;
 int solution(int bridge_length, int weight, vector<int> truck_weights) {
     int answer = 0;
     int cnt = 0;
-    int idx = 0;
     int now_weight = 0;
-    while(idx < truck_weights.size()){
-        int now = truck_weights[idx];
-        if(q.size()<bridge_length && weight>=now+now_weight){
-            now_weight += now;
-            q.push(now);
-            if(idx==0){
-                answer++;
+    for(int i=0;i<truck_weights.size();){
+        int now = truck_weights[i];
+        answer++;
+        if(q.size()==bridge_length){
+            now_weight-=q.front();
+            q.pop();
+        }
+        if(now_weight+now<=weight){
+            if(i==truck_weights.size()-1){
+                answer+=bridge_length;
+                break;
             }
-            idx++;
+            q.push(now);
+            now_weight += now;
+            i++;
         }
         else{
-            if(q.size()>1){
-                answer++;
-                cnt++;
-                now_weight -= q.front();
-                q.pop();
-            }
-            else{
-                answer += bridge_length - cnt;
-                cnt=0;
-                idx++;
-            }
+            q.push(0);
         }
-        printf("%d\n",answer);
     }
     return answer;
 }
