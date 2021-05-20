@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int func(int n) {
+int func(int n) {//
 	int ret = n;
 	while (n) {
 		int tmp = n % 10;

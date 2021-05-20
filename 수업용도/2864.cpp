@@ -3,7 +3,7 @@
 
 void func(char arr[][10], int l) {
 	for (int i = 0; i < l; i++) {
-		if (arr[0][i] == '5') {
+		if (arr[0][i] == '5') { //
 			arr[1][i] = '5';
 			arr[2][i] = '6';
 		}
@@ -32,8 +32,8 @@ int main() {
 	char arr[3][10]; //0번은 original 1번은 최소, 2번은 최대
 	char brr[3][10];
 	scanf("%s %s", arr[0], brr[0]);
-	int la = strlen(arr[0]);
-	int lb = strlen(brr[0]);
+	int la = strlen(arr[0]); //4
+	int lb = strlen(brr[0]); //4
 	func(arr, la);
 	func(brr, lb);
 	int ans1 = val(arr[1], la) + val(brr[1], lb);
