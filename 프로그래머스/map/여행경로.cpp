@@ -1,53 +1,45 @@
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <map>
 
 using namespace std;
-
-vector<int> v[10001];
-vector<string> tmp;
+int n;
+map <string, vector<string>> m;
+map <pair<string,string>,int> visit;
 vector<string> answer;
-map<string, int> m;    
-map<int, string> revm;
-bool chk[10001];
 
-void dfs(int now){
-    if(chk[now])
+void dfs(string now){
+    answer.push_back(now);
+    if(n+1==answer.size())
         return;
-    chk[now]=true;
-    answer.push_back(revm.find(now)->second.c_str());
-    for(int i=0;i<v[now].size();i++){
-        int next = v[now][i];
-        if(chk[next]) continue;
+    for(int i=0;i<m[now].size();i++){
+        string next = m[now][i];
+        if(visit[{now,next}]==0)
+            continue;
+        visit[{now,next}]--;
         dfs(next);
+        if(n+1==answer.size())
+            return;
+        visit[{now,next}]++;        
     }
+    answer.pop_back();
 }
 
 vector<string> solution(vector<vector<string>> tickets) {
-    for(int i=0;i<tickets.size();i++){
-        string now = tickets[i][0];
-        if(m.find(now)==m.end()){
-            m.insert(make_pair(now,m.size()));
-            revm.insert(make_pair(revm.size(),now));
-        }
-        string next = tickets[i][1];
-        if(m.find(next)==m.end()){
-            m.insert(make_pair(next,m.size()));
-            revm.insert(make_pair(revm.size(),next));
-        }
-    }
-    for(auto it=m.begin();it!=m.end();it++){
-        printf("%s %d\n",it->first.c_str(),it->second);
-    }
-    for(int i=0;i<tickets.size();i++){
+    n = tickets.size();
+    sort(tickets.begin(),tickets.end());
+    for(int i=0;i<n;i++){
         string now = tickets[i][0];
         string next = tickets[i][1];
-        int nowval = m[now];
-        int nextval = m[next];
-        v[nowval].push_back(nextval);
+        vector<string> tmp;
+        if(m.find(now)!=m.end()){
+            m.insert(make_pair(now,tmp));
+        }
+        m[now].push_back(next);
+        visit[{now,next}]++;
+        
+        dfs("ICN");
     }
-    int start = m["ICN"];
-    dfs(start);    
-    
     return answer;
 }
