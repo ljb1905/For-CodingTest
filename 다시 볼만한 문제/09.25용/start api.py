@@ -24,3 +24,11 @@ parameter['commands'].append({
 
 r = requests.put(url+'/simulate', headers=headers, data=json.dumps(parameter))
 print(r.json())
+while r.json()['time']<720:
+    r = requests.put(url + '/simulate', headers=headers, data=json.dumps(parameter))
+print(r.json())
+
+
+#score API
+r = requests.get(url+'/score', headers=headers)
+print(r.json())
