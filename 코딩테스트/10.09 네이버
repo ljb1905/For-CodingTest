@@ -1,0 +1,3 @@
+1. R, G, B 배열 주어짐 -> 교환해서 각 배열의 min값의 합이 최대 => arr[n][3]입력
+2. queue[20]개 idx%n 계산으로 front queue에 넣기
+3. 배열 대각 대칭 시키기 sty, edy, stx, edy, type
