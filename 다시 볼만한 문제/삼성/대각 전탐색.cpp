@@ -15,7 +15,7 @@ int dfs(int sty,int stx,int i,int j,int cnt, int stat){//stat은 어느방향으
     if(chk[i][j]) return 0;
     chk[i][j] = true;
     //
-    //printf("%d %d\n",i,j);
+    printf("%d %d %d\n",i,j,stat);
     //
     int ret = 0;
     for(int mul=1;mul<=10;mul++){
@@ -25,10 +25,10 @@ int dfs(int sty,int stx,int i,int j,int cnt, int stat){//stat은 어느방향으
             if(nexti>=21 || nexti <= 0 || nextj >=21 || nextj <= 0) continue;
             if(chk[nexti][nextj]) continue;
             if(stat_arr[k]) continue;
-            // if(stat==0 && k==3) continue;
-            // else if(stat==1 && k==2) continue;
-            // else if(stat==2 && k==1) continue;
-            // else if(stat==3 && k==0) continue;
+            if(stat==0 && (k==3 || k==0)) continue;
+            else if(stat==1 && (k==2 || k==1)) continue;
+            else if(stat==2 && (k==1 || k==2)) continue;
+            else if(stat==3 && (k==0 || k==3)) continue;
             stat_arr[k] = true;
             ret = max(ret,dfs(sty,stx,nexti,nextj,cnt+1,k));
             stat_arr[k] = false;
@@ -67,6 +67,11 @@ int main(int argc, char** argv)
                     }
                     for(int x=0;x<4;x++){
                         ans = max(ans,dfs(i,j,i,j,0,x));
+                        for(int y=1;y<=n;y++){
+                            for(int x=1;x<=n;x++){
+                                chk[y][x] = false;
+                            }
+                        }
                     }
                 }
             }
