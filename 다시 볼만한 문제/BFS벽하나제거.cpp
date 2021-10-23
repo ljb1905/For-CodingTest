@@ -1,49 +1,73 @@
 #include <stdio.h>
-#include <algorithm>
-#include <vector>
+#include <queue>
 using namespace std;
 
-struct s {
-	int st, ed, cost;
-	s(){}
-	s(int st, int ed, int cost) :
-		st(st), ed(ed), cost(cost)
+struct strr {
+	int y, x, cost;
+	bool chk;
+	strr() {}
+	strr(int y, int x, int cost, bool chk)
+		:y(y), x(x), cost(cost), chk(chk)
 	{}
 };
-vector <s> v;
-long long dis[501];
 
-int main() {
+int arr[1011][1011];
+bool visit[1011][1011][2];
+int dx[4] = { -1,0,0,1 };
+int dy[4] = { 0,-1,1,0 };
+queue <strr> q;
+
+int main()
+{
 	int n, m; scanf("%d %d", &n, &m);
-	for (int i = 0; i < m; i++) {
-		int a, b, c; scanf("%d %d %d", &a, &b, &c);
-		v.push_back(s(a, b, c));
+	for (int i = 0; i <= n + 1; i++) {
+		visit[i][m + 1][0] = true;
+		visit[i][0][0] = true;
+		visit[i][m + 1][1] = true;
+		visit[i][0][1] = true;
+	}
+	for (int j = 0; j <= m + 1; j++) {
+		visit[0][j][0] = true;
+		visit[n + 1][j][0] = true;
+		visit[0][j][1] = true;
+		visit[n + 1][j][1] = true;
 	}
 	for (int i = 1; i <= n; i++) {
-		dis[i] = 987654321;
+		for (int j = 1; j <= m; j++) {
+			scanf("%1d", &arr[i][j]);
+		}
 	}
-	dis[1] = 0;
-	for (int i = 0; i < n; i++) {
-		bool chk = false;
-		for (int j = 0; j < m; j++) {
-			s now = v[j];
-			if (dis[now.st] == 987654321)
-				continue;
-			if (dis[now.ed] > dis[now.st] + now.cost) {
-				dis[now.ed] = dis[now.st] + now.cost;
-				chk = true;
+	strr st(1, 1, 1, false);
+	q.push(st);
+	int ans = 0;
+	while (!q.empty()) {
+		strr now = q.front();
+		q.pop();
+		int nowy = now.y;
+		int nowx = now.x;
+		bool block = now.chk;
+		if (nowy == n && nowx == m) {
+			ans = now.cost;
+			break;
+		}
+		for (int i = 0; i < 4; i++) {
+			int nexty = nowy + dy[i];
+			int nextx = nowx + dx[i];
+			if (arr[nexty][nextx] == 1 && block == false) {
+				strr x(nexty,nextx,now.cost+1,true);
+				visit[nexty][nextx][block] = true;
+				q.push(x);
 			}
-		}
-		if (i == n - 1 && chk == true)
-		{
-			printf("-1\n");
-			return 0;
+			else if (arr[nexty][nextx] == 0 && visit[nexty][nextx][block] == false) {
+				strr x(nexty, nextx, now.cost + 1, block);
+				q.push(x);
+				visit[nexty][nextx][block] = true;
+			}
+			
 		}
 	}
-	for (int i = 2; i <= n; i++)
-	{
-		if (dis[i] == 987654321) printf("-1\n");
-		else printf("%d\n", dis[i]);
-	}
+	if (ans == 0)
+		ans = -1;
+	printf("%d\n", ans);
 	return 0;
 }
