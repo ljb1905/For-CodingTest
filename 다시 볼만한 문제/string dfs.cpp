@@ -31,7 +31,7 @@ int val(string s){
 void dfs(string ori, string s){
     if(!notPrime[val(s)])
     {
-        notPrime[val(s)] = true;
+        notPrime[val(s)] = true;//
         answer++;
     }
     if(s.size()==ori.size()){
@@ -48,7 +48,7 @@ void dfs(string ori, string s){
     }
     return;    
 }
-//
+
 
 int solution(string numbers) {
     initt();
