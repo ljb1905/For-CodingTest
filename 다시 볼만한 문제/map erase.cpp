@@ -27,7 +27,6 @@ int solution(string str1, string str2) {
     str1 = initt(str1);
     str2 = initt(str2);
     map<string, int> mapp1;
-    map<string, int> mapp2;
     int allcnt = 0;
     int comcnt = 0;
     for(int i=0;i<str1.size()-1;i++){
@@ -44,24 +43,28 @@ int solution(string str1, string str2) {
         string tmp = "";
         tmp += str2[i];
         tmp += str2[i+1];
-        //if(mapp2[tmp]) continue;
         if(mapp1.count(tmp)){
             //
             //printf("공통 %s\n",tmp.c_str());
             comcnt++;
+            mapp1.find(tmp)->second = mapp1.find(tmp)->second-1;
+            if(mapp1[tmp]==0) mapp1.erase(mapp1.find(tmp));
         }
         else{
            //
             //printf("혼자 %s\n",tmp.c_str()); 
             allcnt++;
         } 
-        mapp2[tmp]++;
     }
     int tmp = allcnt;
     allcnt = max(allcnt,comcnt);
     comcnt = min(tmp,comcnt);
     if(allcnt==0) answer = 65536;
-    else answer = comcnt*65536 / allcnt;
+    else{
+        double tmpp = (double)comcnt/ (double)allcnt;
+        answer = 65536 * tmpp;        
+    }
+    //else answer = comcnt*65536 / allcnt;
     //printf("%d %d\n",comcnt,allcnt);
     return answer;
 }
