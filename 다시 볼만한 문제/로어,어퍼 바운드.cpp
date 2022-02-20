@@ -20,3 +20,5 @@ int main()
 	}
 	return 0;
 }
+
+Lower Bound는 '원하는 값 k 이상이 처음 나오는 위치를 찾는 과정' 이며, Upper Bound는 '원하는 값 k를 초과한 값이 처음 나오는 위치를 찾는 과정'이다. 
