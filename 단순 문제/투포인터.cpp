@@ -1,5 +1,3 @@
-//프로그래머스 보석쇼핑
-
 #include <string>
 #include <vector>
 #include <map>
@@ -20,22 +18,23 @@ vector<int> solution(vector<string> gems) {
     int l = 0;
     int r = 0;
     int ansl = 0;
-    int ansr = 0;
+    int ansr = gems.size()-1;
     int ansmin = 987654321;
     int nowcnt = 1;
     nowmapp[gems[l]]++;
     int n = gems.size();
     while(1){
-        if(l==n || r==n) break;
+        if(l==n) break;
         if(nowcnt<cnt){
             r++;
+            if(r==n) break;
             if(nowmapp[gems[r]]==0){
                 nowcnt++;
             }
             nowmapp[gems[r]]++;
         }
         else{
-            if(nowmapp[gems[l]]==1){
+            if(nowmapp[gems[l]]<=1){
                 if(ansmin > r-l){
                     ansl = l;
                     ansr = r;
@@ -44,7 +43,7 @@ vector<int> solution(vector<string> gems) {
                 nowcnt--;
             }
             nowmapp[gems[l]]--;
-            l++;          
+            l++;        
         }
     }
     answer.push_back(ansl+1);
