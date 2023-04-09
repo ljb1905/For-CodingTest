@@ -44,6 +44,5 @@ int main() {
 	ans = dfs(1, 1);
 	if (flag) printf("-1\n");
 	else printf("%d\n", ans);
-	
 	return 0;
 }
