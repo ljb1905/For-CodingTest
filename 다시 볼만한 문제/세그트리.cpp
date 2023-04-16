@@ -12,19 +12,19 @@ Node tree[2 << 18];
 int B;
 
 void set_tree(){
-    for(int i = B - 1; 0 < i; i--) {
+    for(int i = B - 1; 0 < i; i--) { //부모노드의 값을 자식으로부터 갱신
         tree[i].minx = min(tree[i * 2].minx, tree[i * 2 + 1].minx);
         tree[i].maxx = max(tree[i * 2].maxx, tree[i * 2 + 1].maxx);
     }
 }
 
 Node get_node(int ql, int qr, int l = 1, int r = B, int idx = 1){
-    if(ql <= l && r <= qr) return tree[idx];
+    if(ql <= l && r <= qr) return tree[idx]; //트리의 탐색 범위보다 쿼리의 범위가 더 클 때
 
     int half = (l + r) / 2;
     Node ret1(1000000001, -1), ret2(1000000001, -1);
-    if(ql <= half) ret1 = get_node(ql, qr, l, half, idx * 2);
-    if(half < qr) ret2 = get_node(ql, qr, half + 1, r, idx * 2 + 1);
+    if(ql <= half) ret1 = get_node(ql, qr, l, half, idx * 2); //왼쪽 자식 탐색 필요
+    if(half < qr) ret2 = get_node(ql, qr, half + 1, r, idx * 2 + 1); //오른쪽 자식 탐색 필요
 
     return Node(min(ret1.minx, ret2.minx), max(ret1.maxx, ret2.maxx));
 }
